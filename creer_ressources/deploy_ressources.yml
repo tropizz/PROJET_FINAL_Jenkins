@@ -10,7 +10,6 @@
         key_name: access-key
         instance_type: t2.micro
         image_id: ami-064519b8c76274859
-        wait: yes
         region: us-east-1
         security_groups: sg-05bd4fab7abb21a03
         subnet_id: subnet-0718123ab0ec38a9d 
@@ -25,7 +24,7 @@
         msg: "Instance ID: {{ ec2.instance_ids }}"
 
     - name: Créer un bucket S3
-      aws_s3:
+      amazon.aws.aws_s3:
         bucket: bucket1
         mode: create
         region: us-east-1
