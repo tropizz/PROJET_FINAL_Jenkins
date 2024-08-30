@@ -24,7 +24,7 @@
         msg: "Instance ID: {{ ec2.instance_ids }}"
 
     - name: Créer un bucket S3
-      amazon.aws.aws_s3:
+      amazon.aws.s3_bucket:
         bucket: bucket1
         mode: create
         region: us-east-1
