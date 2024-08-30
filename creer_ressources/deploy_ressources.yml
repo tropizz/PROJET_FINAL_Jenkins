@@ -25,6 +25,7 @@
 
     - name: Créer un bucket S3
       amazon.aws.s3_bucket:
-        name: bucket1
-        mode: create
-        region: us-east-1
+        name: mon-nom-de-bucket
+        region: us-west-2
+        state: present
+
