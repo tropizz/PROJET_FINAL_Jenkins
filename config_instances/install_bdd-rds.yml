@@ -1,1 +1,24 @@
+---
+- name: Créer une base de données RDS sur AWS
+  hosts: localhost
+  gather_facts: no
 
+  tasks:
+    - name: Créer une instance RDS
+      amazon.aws.rds_instance:
+        db_instance_identifier: Instance_bdd-rds
+        engine: mysql
+        db_name: database1
+        master_username: admin
+        master_user_password: @dmin2bdd
+        db_instance_class: db.t2.micro
+        allocated_storage: 20
+        state: present
+        region: us-east-1
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: rds_instance
+
+    - name: Afficher l'Endpoint de la base de données
+      debug:
+        msg: "RDS Endpoint: {{ rds_instance.endpoint }}"
