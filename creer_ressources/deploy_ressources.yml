@@ -2,6 +2,7 @@
 - name: Lancer des instances EC2 et configurer des buckets S3
   hosts: localhost
   gather_facts: no
+  connection: local
 
   tasks:
     - name: Lancer une instance EC2
