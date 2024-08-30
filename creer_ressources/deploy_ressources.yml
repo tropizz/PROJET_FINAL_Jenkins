@@ -28,5 +28,5 @@
         bucket: bucket1
         mode: create
         region: us-east-1
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        aws_access_key: ASIA2362NYVCKRFSQE56
+        aws_secret_key: hGNWs381xX92cTuTjRwuTkelQjZc1vXpQ7E29BrK
