@@ -1,1 +1,16 @@
-
+---
+- name: Déployer Apache sur les serveurs web
+  hosts: webservers
+  become: yes
+ 
+  tasks:
+    - name: Installer Apache
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+ 
+    - name: S'assurer qu'Apache est démarré et activé
+      ansible.builtin.systemd:
+        name: httpd
+        enabled: yes
+        state: started
