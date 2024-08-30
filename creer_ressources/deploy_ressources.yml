@@ -25,8 +25,5 @@
 
     - name: Créer un bucket S3
       amazon.aws.s3_bucket:
-        bucket: bucket1
-        mode: create
-        region: us-east-1
-        aws_access_key: ASIA2362NYVCKRFSQE56
-        aws_secret_key: hGNWs381xX92cTuTjRwuTkelQjZc1vXpQ7E29BrK
+        name: bucket1
+        state: present
