@@ -12,11 +12,12 @@
         image_id: ami-064519b8c76274859
         wait: yes
         region: us-east-1
+        security_groups: sg-05bd4fab7abb21a03
+        subnet_id: subnet-0718123ab0ec38a9d 
+        wait: yes
         count: 1
-        vpc_subnet_id: subnet-0718123ab0ec38a9d
-        assign_public_ip: yes
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        network:
+          assign_public_ip: yes
       register: ec2
 
     - name: Afficher l'ID de l'instance
