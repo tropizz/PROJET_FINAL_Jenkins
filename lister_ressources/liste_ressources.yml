@@ -1,0 +1,60 @@
+---
+- name: Lister les ressources AWS
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Lister les VPCs
+      amazon.aws.ec2_vpc_net_info:
+        region: us-east-1
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: vpcs_info
+
+    - name: Afficher les VPCs
+      debug:
+        msg: "Liste des VPCs : {{ vpcs_info.vpcs }}"
+
+    - name: Lister les Subnets
+      amazon.aws.ec2_vpc_subnet_info:
+        region: us-east-1
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: subnets_info
+
+    - name: Afficher les Subnets
+      debug:
+        msg: "Liste des Subnets : {{ subnets_info.subnets }}"
+
+    - name: Lister les Groupes de Sécurité
+      amazon.aws.ec2_group_info:
+        region: us-east-1
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: security_groups_info
+
+    - name: Afficher les Groupes de Sécurité
+      debug:
+        msg: "Liste des Groupes de Sécurité : {{ security_groups_info.security_groups }}"
+
+    - name: Lister les Instances EC2
+      amazon.aws.ec2_instance_info:
+        region: us-east-1
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: ec2_instances_info
+
+    - name: Afficher les Instances EC2
+      debug:
+        msg: "Liste des Instances EC2 : {{ ec2_instances_info.instances }}"
+
+    - name: Lister les Buckets S3
+      amazon.aws.aws_s3_bucket_facts:
+        region: us-east-1
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: s3_buckets_info
+
+    - name: Afficher les Buckets S3
+      debug:
+        msg: "Liste des Buckets S3 : {{ s3_buckets_info.buckets }}"
