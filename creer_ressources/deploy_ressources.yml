@@ -6,7 +6,7 @@
 
   tasks:
     - name: Lancer une instance EC2
-      amazon.aws.ec2:
+      amazon.aws.ec2_instance:
         key_name: access-key
         instance_type: t2.micro
         image: ami-064519b8c76274859
