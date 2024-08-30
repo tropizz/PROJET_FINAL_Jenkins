@@ -27,3 +27,4 @@
       amazon.aws.s3_bucket:
         name: bucket1
         state: present
+        region: us-east-1
