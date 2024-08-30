@@ -9,7 +9,7 @@
       amazon.aws.ec2_instance:
         key_name: access-key
         instance_type: t2.micro
-        image: ami-064519b8c76274859
+        image_id: ami-064519b8c76274859
         wait: yes
         region: us-east-1
         count: 1
