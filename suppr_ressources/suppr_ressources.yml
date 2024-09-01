@@ -4,7 +4,7 @@
   gather_facts: no
 
   vars:
-    instance_id: "i-x"
+    instance_id: "i-0672b828e544d2ff9"
 
   tasks:
     - name: Supprimer l'instance EC2
