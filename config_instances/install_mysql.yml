@@ -2,44 +2,25 @@
 - name: Install and configure MariaDB
   hosts: localhost
   become: yes
-
+ 
   tasks:
   - name: Install MariaDB
     apt:
       name: mariadb-server
       state: present
-
+ 
   - name: Start MariaDB service
     service:
       name: mariadb
       state: started
       enabled: yes
-
-  - name: Configure MariaDB
-    template:
-      src: templates/mariadb.cnf.j2
-      dest: /etc/mysql/mariadb.conf.d/50-server.cnf
-      mode: '0644'
-    notify: restart mariadb
-
+ 
   - name: Set MariaDB root password
     mysql_user:
       name: root
       password: "root"
       state: present
-      
-  - name: Create a new database
-    mysql_db:
-      name: "database_1"
-      state: present
-
-  - name: Create a new user
-    mysql_user:
-      name: "TpSQL"
-      password: "lqspt"
-      priv: "database_1.*:ALL"
-      state: present
-
+ 
   handlers:
   - name: restart mariadb
     service:
