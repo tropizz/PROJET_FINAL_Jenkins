@@ -14,10 +14,10 @@
     amazon.aws.s3_bucket_info:
     register: s3_buckets
 
-  - name: Print results
+   - name: Print results
     debug:
-      var: instances.instances | json_query('[].{InstanceId: InstanceId, Name: Tags[?Key==`Name`].Value|[0]}')
-
+      msg: "{{ instances.instances | json_query('[].{InstanceId: InstanceId, Name: Tags[?Key==`Name`].Value|[0]}') }}"
+      
   - name: Print results
     debug:
       var: security_groups.security_groups | json_query('[].{GroupId: GroupId, Name: GroupName}')
