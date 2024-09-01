@@ -1,28 +1,30 @@
 ---
-- name: Install and configure MariaDB
+- name: Lancer des instances EC2 et configurer des buckets S3
   hosts: localhost
-  become: yes
- 
+  gather_facts: no
+  connection: local
+
   tasks:
-  - name: Install MariaDB
-    apt:
-      name: mariadb-server
-      state: present
- 
-  - name: Start MariaDB service
-    service:
-      name: mariadb
-      state: started
-      enabled: yes
- 
-  - name: Set MariaDB root password
-    mysql_user:
-      name: root
-      password: "root"
-      state: present
- 
-  handlers:
-  - name: restart mariadb
-    service:
-      name: mariadb
-      state: restarted
+    - name: Lancer une instance EC2
+      amazon.aws.ec2_instance:
+        key_name: access-key
+        instance_type: t2.micro
+        image_id: ami-064519b8c76274859
+        region: us-east-1
+        security_groups: sg-05bd4fab7abb21a03
+        subnet_id: subnet-0718123ab0ec38a9d 
+        wait: yes
+        count: 1
+        network:
+          assign_public_ip: yes
+      register: ec2
+
+    - name: Afficher l'ID de l'instance
+      debug:
+        msg: "Instance ID: {{ ec2.instance_ids }}"
+
+    - name: Créer un bucket S3
+      amazon.aws.s3_bucket:
+        name: mon-nom-de-bucket
+        region: us-west-2
+        state: present
