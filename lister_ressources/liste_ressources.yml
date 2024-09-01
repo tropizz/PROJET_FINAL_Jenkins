@@ -5,7 +5,7 @@
 
   tasks:
     - name: Lister les VPCs
-      ec2_vpc:
+      amazon.aws.ec2_vpc_info:
         region: us-east-1
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
