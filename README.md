@@ -51,6 +51,11 @@ Fichier .yml utilisé : creer_ressources/deploy_ressources.yml
 
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/script_job_deploy_bdd.png)
 
+Ce stage à été nommé "git" dans jenkins. Voici un apercu de la sortie : 
+
+![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/output__script_git.png)
+
+
 ##### c) Job pour modifier ou supprimer des ressources
 
 Nous avons développé des scripts Ansible pour mettre à jour ou supprimer des ressources AWS, tels que la suppression d'instances EC2. Ces scripts sont exécutés via le job "delete_ressources" dans Jenkins.
@@ -76,6 +81,10 @@ Fichier "hosts" :
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/fichier_ansible_hosts.png)
 
 Le fichier `hosts` permet de regrouper un ou plusieurs serveurs par utilisateur pour ensuite déployer certains services uniquement sur certains "hosts" machines. Par exemple, déployer le service Apache2 uniquement sur les serveurs web !
+
+Dans cette partie nous avons lancé les jobs "deploy_dbb" et "deploy_tp". Apercu de la sortie (outpouts de deployement_tp) pour aache 2 : 
+
+![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/outpout_console_apache.png)
 
 ##### b) Automatisation via Jenkins
 
