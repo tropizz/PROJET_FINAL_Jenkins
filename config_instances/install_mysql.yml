@@ -2,30 +2,50 @@
 - name: Install and configure MariaDB
   hosts: localhost
   become: yes
- 
+  gather_facts: yes
+
+  vars:
+    mariadb_root_password: "My@Sql1"
+
   tasks:
-  - name: Install MariaDB
-    apt:
-      name: mariadb-server
-      state: present
- 
-  - name: Start MariaDB service
-    service:
-      name: mariadb
-      state: started
-      enabled: yes
- 
-  - name: Set MariaDB root password
-    mysql_user:
-      name: root
-      password: root
-      check_implicit_admin: yes
-      login_unix_socket: /var/lib/mysql/mysql.sock
-    become: yes
-    become_method: sudo
- 
+    - name: Install MariaDB
+      apt:
+        name: mariadb-server
+        state: present
+      notify: restart mariadb
+
+    - name: Ensure MariaDB is running and enabled
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+
+    - name: Wait for MariaDB socket to be available
+      wait_for:
+        path: /var/run/mysqld/mysqld.sock
+        state: started
+        timeout: 30
+
+    - name: Set MariaDB root password
+      mysql_user:
+        name: root
+        password: "{{ mariadb_root_password }}"
+        host: localhost
+        state: present
+        check_implicit_admin: yes
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    - name: Ensure root can login with password
+      mysql_user:
+        name: root
+        password: "{{ mariadb_root_password }}"
+        host: localhost
+        state: present
+        priv: "*.*:ALL,GRANT"
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+
   handlers:
-  - name: restart mariadb
-    service:
-      name: mariadb
-      state: restarted
+    - name: restart mariadb
+      service:
+        name: mariadb
+        state: restarted
