@@ -10,13 +10,7 @@
         "instance-state-name": "running"
         "tag:Environment": "dev"
     register: instances
-
-  - name: List VPCs
-    amazon.aws.ec2_vpc_info:
-      filters:
-        "tag:Environment": "dev"
-    register: vpcs
-
+    
   - name: List security groups
     amazon.aws.ec2_security_group_info:
       filters:
