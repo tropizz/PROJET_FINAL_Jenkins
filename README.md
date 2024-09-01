@@ -1,15 +1,11 @@
-# PROJET_FINAL_Jenkins
-Projet final jenkins et ansible avec AWS
------------------------------------------
-Jeremie EDOUARD & Tomi VAILLANT
------------------------------------------
+
 ### Compte Rendu de Pratique : Jenkins et Ansible avec AWS
 
 #### Contexte du Projet
 
 Dans ce projet, nous avons configuré un environnement automatisé pour la gestion des ressources AWS, en utilisant **Jenkins** pour orchestrer les déploiements et les tâches, et **Ansible** pour gérer les configurations des ressources AWS. Nous avons installé Jenkins et Ansible sur deux machines virtuelles distinctes, hébergées localement sur un PC, avec une connexion à nos comptes AWS via l'interface en ligne de commande (CLI).
 
-Tout les fichier Yamel utiliser pour se projet on été crée dans GitHub. Jenkins les a ensuite récupérer à partir de se dépot.
+Tous les fichiers YAML utilisés pour ce projet ont été créés dans GitHub. Jenkins les a ensuite récupérés à partir de ce dépôt.
 
 #### Objectifs
 
@@ -26,35 +22,31 @@ Pour ce projet, nous avons configuré deux instances EC2 pour héberger Jenkins 
 
 #### 2. Création des Jobs Jenkins
 
-Tout nos obs Jenkins ont été configuré de la même manière, le depot Github étaitn indiqué puis dans la partie "script shell" nous avons mis en place une suite de commande suivant un schéma similaire pour chaque job.
-Ce schéma consiste à envoyé sur la machine Ansible les fichier yml souhaitez via SCP, puis l'on déplace dans un répertoire "playbook" le fichier .yml et pour finir nous lançons la commande "ansible-playbook"
+Tous nos jobs Jenkins ont été configurés de la même manière. Le dépôt GitHub était indiqué, puis dans la partie "script shell", nous avons mis en place une suite de commandes suivant un schéma similaire pour chaque job. Ce schéma consiste à envoyer les fichiers YAML souhaités sur la machine Ansible via SCP, à les déplacer dans un répertoire "playbook", puis à lancer la commande `ansible-playbook`.
 
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/configuration_git.png)
 
-Dans certains scripts shell nous avons du directement, introduis des D et Mot de passe en clair.... Nous avons utiliser cette solutions pour palier à certains bug et soucis de mise en place.
-Nous restosn conscien qu'il est préférable de ne pas laisser d'informations d'identificatuion en clair.
+Dans certains scripts shell, nous avons dû introduire directement des identifiants et des mots de passe en clair. Nous avons utilisé cette solution pour pallier certains bugs et problèmes de mise en place. Nous restons conscients qu'il est préférable de ne pas laisser d'informations d'identification en clair.
 
 ##### a) Job pour lister les services AWS
 
-Le job "list_service" est le premier script exécuté dans la pipeline. Il utilise un playbook Ansible pour lister les ressources AWS, notamment les instances EC2, les buckets S3, et les groupes de sécurité. 
+Le job "list_service" est le premier script exécuté dans le pipeline. Il utilise un playbook Ansible pour lister les ressources AWS, notamment les instances EC2, les buckets S3, et les groupes de sécurité.
 
-Ce job est crucial car il permet de vérifier l'état actuel des ressources avant de procéder à d'autres opérations, comme le déploiement ou la suppression de ressources. Le playbook Ansible utilise les modules `aws_ec2_info` et `aws_s3_bucket_info` pour récupérer ces informations. 
+Ce job est crucial car il permet de vérifier l'état actuel des ressources avant de procéder à d'autres opérations, comme le déploiement ou la suppression de ressources. Le playbook Ansible utilise les modules `aws_ec2_info` et `aws_s3_bucket_info` pour récupérer ces informations.
 
-fichier .yml utilisé : /lister_ressources/liste_ressources.yml
+Fichier .yml utilisé : /lister_ressources/liste_ressources.yml
 
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/script_job_list_service.png)
 
-
 ##### b) Job pour créer de nouvelles ressources
 
-Un playbook Ansible a été développé pour déployer des ressources AWS, incluant la création d'instances EC2 et de buckets S3. Ce playbook est exécuté via le job "deploy_bdd" dans Jenkins.
+Nous avons développé un playbook Ansible pour déployer des ressources AWS, incluant la création d'instances EC2 et de buckets S3. Ce playbook est exécuté via le job "deploy_bdd" dans Jenkins.
 
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/script_job_deploy_bdd.png)
- 
 
 ##### c) Job pour modifier ou supprimer des ressources
 
-Des scripts Ansible ont été développés pour mettre à jour ou supprimer des ressources AWS, tels que la suppression d'instances EC2. Ces scripts sont exécutés via le job "delete_ressources" dans Jenkins.
+Nous avons développé des scripts Ansible pour mettre à jour ou supprimer des ressources AWS, tels que la suppression d'instances EC2. Ces scripts sont exécutés via le job "delete_ressources" dans Jenkins.
 
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/script_job_delete_ressources.png)
 
@@ -62,41 +54,39 @@ Des scripts Ansible ont été développés pour mettre à jour ou supprimer des 
 
 ##### a) Développement de playbooks Ansible
 
-Les playbooks Ansible ont été créés pour gérer les configurations des instances EC2, comme l'installation de MySQL et d'Apache.
+Nous avons créé des playbooks Ansible pour gérer les configurations des instances EC2, comme l'installation de MySQL et d'Apache.
 
-Pour cette utilisation de Ansible nous avons du configurer d'autre paramètre supplémentaire directmeent dans les fichiers de configurations de la VM Ansible.
-Fichier "ansible.cfg" :
+Pour cette utilisation d'Ansible, nous avons dû configurer d'autres paramètres supplémentaires directement dans les fichiers de configuration de la VM Ansible.
+
+Fichier "ansible.cfg" :  
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/fichier_ansible_cfg.png)
 
-Fichier "hosts" :
-
+Fichier "hosts" :  
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/fichier_ansible_hosts.png)
 
-Le fichier host permet de regrouper un ou plusieurs serveur par utilisté pour ensuite déployer certains servies uniquement sur certain "hosts" machine.
-Par exemple déployer le service apache2 sur uniquement les serveur web !
+Le fichier `hosts` permet de regrouper un ou plusieurs serveurs par utilisateur pour ensuite déployer certains services uniquement sur certains "hosts" machines. Par exemple, déployer le service Apache2 uniquement sur les serveurs web !
 
 ##### b) Automatisation via Jenkins
 
-Jenkins a été configuré pour exécuter ces playbooks Ansible automatiquement selon des déclencheurs spécifiques, garantissant une gestion continue et automatisée des configurations.
+Nous avons configuré Jenkins pour exécuter ces playbooks Ansible automatiquement selon des déclencheurs spécifiques, garantissant une gestion continue et automatisée des configurations.
 
 #### 4. Présentation des Résultats
 
 ##### a) Documentation Technique
 
-La méthodologie suivie, les configurations des jobs Jenkins, des playbooks Ansible, et les ressources AWS ont été documentées en détail, incluant les mesures de sécurité mises en place.
+Nous avons documenté en détail la méthodologie suivie, les configurations des jobs Jenkins, des playbooks Ansible, et les ressources AWS, incluant les mesures de sécurité mises en place.
 
 ##### b) Présentation des Dashboards
 
-Les dashboards Jenkins ont été configurés pour présenter de manière claire et intuitive l'état des jobs, permettant une visualisation rapide des résultats.
+Nous avons configuré les dashboards Jenkins pour présenter de manière claire et intuitive l'état des jobs, permettant une visualisation rapide des résultats.
 
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/dashboard_jenkins.png)
 
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/repertoire_jenkins_workspace.png)
 
-
 ### Analyse du Script d'Exécution (Pipeline Jenkins)
 
-Voici un extrait du dernier script Jenkins Pipeline utilisé pour orchestrer les différents jobs dans le pipeline :
+Voici un extrait du dernier script Jenkins Pipeline que nous avons utilisé pour orchestrer les différents jobs dans le pipeline :
 
 ```groovy
 pipeline {
@@ -166,13 +156,8 @@ pipeline {
 ### Explication de la Pipeline
 
 - **`stage('List Services')`** : Ce stage exécute le job `list_service`, qui liste les services AWS pour s'assurer que les ressources actuelles sont correctement identifiées avant de procéder à d'autres opérations.
-
 - **`stage('Git Operations')`** : Ce stage gère les opérations Git, comme le pull des dernières modifications depuis le dépôt.
-
 - **`stage('Deploy Service')` et `stage('Deploy Database')`** : Ces stages déploient les services et les bases de données en utilisant Ansible via les jobs `deploy_service` et `deploy_bdd`.
-
 - **`stage('Delete Resources')`** : Ce stage supprime les ressources non nécessaires en exécutant le job `delete_ressources`.
 
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/output_console_pipeline.png)
-
----
