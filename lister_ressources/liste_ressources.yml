@@ -7,7 +7,7 @@
   - name: List security groups
     amazon.aws.ec2_group_info:
       filters:
-        group-name: *
+        "group-name": "*"
     register: security_groups
 
   - name: List S3 buckets
