@@ -12,6 +12,8 @@
 
     - name: List security groups
       amazon.aws.ec2_group_info:
+        filters:
+          "group-name": "*"
       register: security_groups
 
     - name: List S3 buckets
@@ -20,7 +22,7 @@
 
     - name: Print instance results
       debug:
-        msg: "{{ instances.instances | json_query('[].{InstanceId: InstanceId, Name: Tags[?Key==`Name`].Value | join(`, `)}') }}"
+        msg: "{{ instances.instances | json_query('[].{InstanceId: InstanceId, Name: Tags[?Key==`Name`].Value|[0]}') }}"
         
     - name: Print security group results
       debug:
