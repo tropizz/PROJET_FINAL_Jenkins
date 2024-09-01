@@ -24,15 +24,15 @@
 
   - name: Print results
     debug:
-      msg: "Instances: {{ instances.instances | json_query('*.InstanceId') }}"
-      verbosity: 0
+      var: instances.instances | json_query('*.InstanceId')
+      stdout_lines: yes
 
   - name: Print results
     debug:
-      msg: "Security groups: {{ security_groups.security_groups | json_query('*.GroupId') }}"
-      verbosity: 0
+      var: security_groups.security_groups | json_query('*.GroupId')
+      stdout_lines: yes
 
   - name: Print results
     debug:
-      msg: "S3 buckets: {{ s3_buckets.buckets | json_query('*.Name') }}"
-      verbosity: 0
+      var: s3_buckets.buckets | json_query('*.Name')
+      stdout_lines: yes
