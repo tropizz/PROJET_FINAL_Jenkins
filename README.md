@@ -23,7 +23,7 @@ Tous les fichiers YAML utilisés pour ce projet ont été créés dans GitHub. J
 
 #### 1. Préparation des Ressources
 
-Pour ce projet, nous avons configuré deux instances EC2 pour héberger Jenkins et Ansible. Les ressources AWS ont été configurées via des scripts Ansible, et la sécurité des données sensibles a été assurée par AWS KMS.
+Pour ce projet, nous avons configuré deux VM localement sur un de nos poste (VM-ANSIBLE & VM-JENKIS) . Chaqu'une d'elle hébergeant respectivement son service. Les ressources AWS ont été configurées via des scripts Ansible, et la sécurité des données sensibles a été assurée par AWS. La VM-Ansible communiquais avec le cloud AWS via le Amazon CLI.
 
 #### 2. Création des Jobs Jenkins
 
@@ -47,11 +47,15 @@ Fichier .yml utilisé : /lister_ressources/liste_ressources.yml
 
 Nous avons développé un playbook Ansible pour déployer des ressources AWS, incluant la création d'instances EC2 et de buckets S3. Ce playbook est exécuté via le job "deploy_bdd" dans Jenkins.
 
+Fichier .yml utilisé : creer_ressources/deploy_ressources.yml
+
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/script_job_deploy_bdd.png)
 
 ##### c) Job pour modifier ou supprimer des ressources
 
 Nous avons développé des scripts Ansible pour mettre à jour ou supprimer des ressources AWS, tels que la suppression d'instances EC2. Ces scripts sont exécutés via le job "delete_ressources" dans Jenkins.
+
+Fichier .yml utilisé : suppr_ressources/suppr_ressources.yml
 
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/script_job_delete_ressources.png)
 
@@ -60,6 +64,8 @@ Nous avons développé des scripts Ansible pour mettre à jour ou supprimer des 
 ##### a) Développement de playbooks Ansible
 
 Nous avons créé des playbooks Ansible pour gérer les configurations des instances EC2, comme l'installation de MySQL et d'Apache.
+
+Fichier .yml utilisé : config_instances/install_mysql.yml & config_instances/install_apache2.yml
 
 Pour cette utilisation d'Ansible, nous avons dû configurer d'autres paramètres supplémentaires directement dans les fichiers de configuration de la VM Ansible.
 
