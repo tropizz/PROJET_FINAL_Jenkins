@@ -1,6 +1,6 @@
 ---
 - name: Installer Apache sur les serveurs
-  hosts: webservers
+  hosts: webapache
   become: yes
  
   tasks:
