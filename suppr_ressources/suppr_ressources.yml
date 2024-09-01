@@ -8,7 +8,7 @@
 
   tasks:
     - name: Supprimer l'instance EC2
-      amazon.aws.ec2:
+      amazon.aws.ec2_instance:
         instance_ids: "{{ instance_id }}"
         state: absent
         region: us-east-1  # Remplace par la région où se trouve l'instance
