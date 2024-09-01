@@ -27,11 +27,13 @@
       name: root
       password: "root"
       state: present
-
-  - name: Create a new database and user
+      
+  - name: Create a new database
     mysql_db:
       name: "database_1"
       state: present
+
+  - name: Create a new user
     mysql_user:
       name: "TpSQL"
       password: "lqspt"
