@@ -1,1 +1,21 @@
+---
+- name: Supprimer une instance AWS EC2
+  hosts: localhost
+  gather_facts: no
 
+  vars:
+    instance_id: "i-x"
+
+  tasks:
+    - name: Supprimer l'instance EC2
+      amazon.aws.ec2:
+        instance_ids: "{{ instance_id }}"
+        state: absent
+        region: us-east-1  # Remplace par la région où se trouve l'instance
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: ec2_termination
+
+    - name: Vérifier la suppression de l'instance
+      debug:
+        msg: "Instance {{ instance_id }} supprimée avec succès."
