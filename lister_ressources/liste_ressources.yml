@@ -1,21 +1,13 @@
----
-- name: List AWS resources
-  hosts: localhost
-  gather_facts: no
-
-  tasks:
   - name: List instances
     amazon.aws.ec2_instance_info:
       filters:
-        "instance-state-name": "running"
-        "tag:Environment": "dev"
+        instance-state-name: running
     register: instances
-    
+
   - name: List security groups
-    amazon.aws.ec2_security_group_info:
+    amazon.aws.ec2_group_info:
       filters:
-        "group-name": "my-sg"
-        "tag:Environment": "dev"
+        group-name: *
     register: security_groups
 
   - name: List S3 buckets
@@ -24,15 +16,12 @@
 
   - name: Print results
     debug:
-      var: instances.instances | json_query('*.InstanceId')
-      stdout_lines: yes
+      var: instances.instances | json_query('[].{InstanceId: InstanceId, Name: Tags[?Key==`Name`].Value|[0]}')
 
   - name: Print results
     debug:
-      var: security_groups.security_groups | json_query('*.GroupId')
-      stdout_lines: yes
+      var: security_groups.security_groups | json_query('[].{GroupId: GroupId, Name: GroupName}')
 
   - name: Print results
     debug:
-      var: s3_buckets.buckets | json_query('*.Name')
-      stdout_lines: yes
+      var: s3_buckets.buckets | json_query('[].{Name: Name}')
