@@ -69,6 +69,7 @@ Fichier "ansible.cfg" :
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/fichier_ansible_cfg.png)
 
 Fichier "hosts" :
+
 ![alt text](https://github.com/tropizz/PROJET_FINAL_Jenkins/blob/main/screenshots/fichier_ansible_hosts.png)
 
 Le fichier host permet de regrouper un ou plusieurs serveur par utilisté pour ensuite déployer certains servies uniquement sur certain "hosts" machine.
