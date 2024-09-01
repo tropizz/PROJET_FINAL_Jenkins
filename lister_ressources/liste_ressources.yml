@@ -1,60 +1,60 @@
 ---
-- name: Lister les ressources AWS
-  hosts: localost
+- name: List AWS resources
+  hosts: localhost
   gather_facts: no
 
   tasks:
-    - name: Lister les VPCs
-      amazon.aws.ec2_net_info:
-        region: us-east-1
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-      register: vpcs_info
+  - name: List VPCs
+    amazon.aws.ec2_vpc_info:
+      filters:
+        "tag:Environment": "dev"
+    register: vpcs
 
-    - name: Afficher les VPCs
-      debug:
-        msg: "Liste des VPCs : {{ vpcs_info.vpcs }}"
+  - name: List instances
+    amazon.aws.ec2_instance_info:
+      filters:
+        "instance-state-name": "running"
+        "tag:Environment": "dev"
+    register: instances
 
-    - name: Lister les Subnets
-      amazon.aws.ec2_subnet_info:
-        region: us-east-1
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-      register: subnets_info
+  - name: List security groups
+    amazon.aws.ec2_security_group_info:
+      filters:
+        "group-name": "my-sg"
+        "tag:Environment": "dev"
+    register: security_groups
 
-    - name: Afficher les Subnets
-      debug:
-        msg: "Liste des Subnets : {{ subnets_info.subnets }}"
+  - name: List subnets
+    amazon.aws.ec2_subnet_info:
+      filters:
+        "tag:Environment": "dev"
+    register: subnets
 
-    - name: Lister les Groupes de Sécurité
-      amazon.aws.ec2_security_group_info:
-        region: us-east-1
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-      register: security_groups_info
+  - name: List S3 buckets
+    amazon.aws.s3_bucket_info:
+    register: s3_buckets
 
-    - name: Afficher les Groupes de Sécurité
-      debug:
-        msg: "Liste des Groupes de Sécurité : {{ security_groups_info.security_groups }}"
+  - name: Print results
+    debug:
+      msg: "VPCs: {{ vpcs.vpcs | json_query('*.VpcId') }}"
+      verbosity: 0
 
-    - name: Lister les Instances EC2
-      amazon.aws.ec2_instance_facts:
-        region: us-east-1
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-      register: ec2_instances_info
+  - name: Print results
+    debug:
+      msg: "Instances: {{ instances.instances | json_query('*.InstanceId') }}"
+      verbosity: 0
 
-    - name: Afficher les Instances EC2
-      debug:
-        msg: "Liste des Instances EC2 : {{ ec2_instances_info.instances }}"
+  - name: Print results
+    debug:
+      msg: "Security groups: {{ security_groups.security_groups | json_query('*.GroupId') }}"
+      verbosity: 0
 
-    - name: Lister les Buckets S3
-      amazon.aws.s3_bucket_info:
-        region: us-east-1
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-      register: s3_buckets_info
+  - name: Print results
+    debug:
+      msg: "Subnets: {{ subnets.subnets | json_query('*.SubnetId') }}"
+      verbosity: 0
 
-    - name: Afficher les Buckets S3
-      debug:
-        msg: "Liste des Buckets S3 : {{ s3_buckets_info.buckets }}"
+  - name: Print results
+    debug:
+      msg: "S3 buckets: {{ s3_buckets.buckets | json_query('*.Name') }}"
+      verbosity: 0
