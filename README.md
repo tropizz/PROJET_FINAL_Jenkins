@@ -1,3 +1,8 @@
+# PROJET_FINAL_Jenkins
+Projet final jenkins et ansible avec AWS
+-----------------------------------------
+Jeremie EDOUARD & Tomi VAILLANT
+----------------------------------------
 
 ### Compte Rendu de Pratique : Jenkins et Ansible avec AWS
 
