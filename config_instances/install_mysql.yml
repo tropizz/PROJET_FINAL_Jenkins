@@ -1,24 +1,45 @@
 ---
-- name: Créer une base de données RDS sur AWS
+- name: Install and configure MariaDB
   hosts: localhost
-  gather_facts: no
+  become: yes
 
   tasks:
-    - name: Créer une instance RDS
-      amazon.aws.rds_instance:
-        db_instance_identifier: Instance_bdd-rds
-        engine: mysql
-        db_name: database1
-        master_username: admin
-        master_user_password: @dmin2bdd
-        db_instance_class: db.t2.micro
-        allocated_storage: 20
-        state: present
-        region: us-east-1
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-      register: rds_instance
+  - name: Install MariaDB
+    apt:
+      name: mariadb-server
+      state: present
 
-    - name: Afficher l'Endpoint de la base de données
-      debug:
-        msg: "RDS Endpoint: {{ rds_instance.endpoint }}"
+  - name: Start MariaDB service
+    service:
+      name: mariadb
+      state: started
+      enabled: yes
+
+  - name: Configure MariaDB
+    template:
+      src: templates/mariadb.cnf.j2
+      dest: /etc/mysql/mariadb.conf.d/50-server.cnf
+      mode: '0644'
+    notify: restart mariadb
+
+  - name: Set MariaDB root password
+    mysql_user:
+      name: root
+      password: "root"
+      state: present
+
+  - name: Create a new database and user
+    mysql_db:
+      name: "database_1"
+      state: present
+    mysql_user:
+      name: "TpSQL"
+      password: "lqspt"
+      priv: "database_1.*:ALL"
+      state: present
+
+  handlers:
+  - name: restart mariadb
+    service:
+      name: mariadb
+      state: restarted
