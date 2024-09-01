@@ -1,27 +1,33 @@
-  - name: List instances
-    amazon.aws.ec2_instance_info:
-      filters:
-        instance-state-name: running
-    register: instances
+---
+- name: Lister les ressources AWS
+  hosts: localhost
+  gather_facts: no
 
-  - name: List security groups
-    amazon.aws.ec2_group_info:
-      filters:
-        "group-name": "*"
-    register: security_groups
+  tasks:
+    - name: List instances
+      amazon.aws.ec2_instance_info:
+        filters:
+          instance-state-name: running
+      register: instances
 
-  - name: List S3 buckets
-    amazon.aws.s3_bucket_info:
-    register: s3_buckets
+    - name: List security groups
+      amazon.aws.ec2_group_info:
+        filters:
+          "group-name": "*"
+      register: security_groups
 
-   - name: Print results
-    debug:
-      msg: "{{ instances.instances | json_query('[].{InstanceId: InstanceId, Name: Tags[?Key==`Name`].Value|[0]}') }}"
-      
-  - name: Print results
-    debug:
-      var: security_groups.security_groups | json_query('[].{GroupId: GroupId, Name: GroupName}')
+    - name: List S3 buckets
+      amazon.aws.s3_bucket_info:
+      register: s3_buckets
 
-  - name: Print results
-    debug:
-      var: s3_buckets.buckets | json_query('[].{Name: Name}')
+    - name: Print instance results
+      debug:
+        msg: "{{ instances.instances | json_query('[].{InstanceId: InstanceId, Name: Tags[?Key==`Name`].Value|[0]}') }}"
+        
+    - name: Print security group results
+      debug:
+        msg: "{{ security_groups.security_groups | json_query('[].{GroupId: GroupId, Name: GroupName}') }}"
+
+    - name: Print S3 bucket results
+      debug:
+        msg: "{{ s3_buckets.buckets | json_query('[].{Name: Name}') }}"
