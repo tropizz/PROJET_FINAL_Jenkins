@@ -18,8 +18,11 @@
   - name: Set MariaDB root password
     mysql_user:
       name: root
-      password: "root"
-      state: present
+      password: root
+      check_implicit_admin: yes
+      login_unix_socket: /var/lib/mysql/mysql.sock
+    become: yes
+    become_method: sudo
  
   handlers:
   - name: restart mariadb
